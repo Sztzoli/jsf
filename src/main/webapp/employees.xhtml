@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:ui="http://java.sun.com/jsf/facelets">
+
+<f:view locale="#{localeController.locale}">
+<ui:composition template="/WEB-INF/templates/page.xhtml">
+
+    <ui:define name="title">#{msgs['title']}</ui:define>
+
+    <ui:define name="content">
+        <f:loadBundle var="mainMsgs" basename="Main"/>
+
+
+
+        <h2>#{mainMsgs.subtitle}</h2>
+
+        <h:form>
+            <h:commandLink value="Magyar" action="#{localeController.changeLocale('hu')}"/>
+            <h:commandLink value="English" action="#{localeController.changeLocale('en')}"/>
+        </h:form>
+
+        <f:metadata>
+            <f:viewParam name="query" value="#{employeesController.query}"/>
+            <f:viewAction action="#{employeesController.initEmployees}"/>
+        </f:metadata>
+
+        <h:messages infoClass="alert alert-info" />
+        <form>
+            <input name="query" value="#{employeesController.query}"/>
+            <input type="submit" value="Search"/>
+        </form>
+
+        <h:dataTable value="#{employeesController.employees}" var="employee" styleClass="table table-striped">
+            <h:column>
+                <f:facet name="header">
+                    Id
+                </f:facet>
+                <h:link value="#{employee.id}" outcome="update-employee.xhtml">
+                    <f:param value="#{employee.id}" name="id" />
+                </h:link>
+
+            </h:column>
+            <h:column>
+                <f:facet name="header">
+                    Name
+                </f:facet>
+                #{employee.name}
+            </h:column>
+            <h:column>
+                <f:facet name="header">
+                    CardNumber
+                </f:facet>
+                #{employee.cardNumber}
+            </h:column>
+            <h:column>
+                <f:facet name="header">
+                    Type
+                </f:facet>
+                #{employee.type}
+            </h:column>
+            <h:column>
+                <f:facet name="header">
+                    Skills
+                </f:facet>
+                #{employee.skills}
+            </h:column>
+            <h:column>
+                <f:facet name="header">
+                    filename
+                </f:facet>
+                <h:graphicImage value="/files/#{employee.filename}" alt="#{employee.name}"/>
+            </h:column>
+
+            <h:column>
+                <f:facet name="header">
+                    date
+                </f:facet>
+                <h:outputText value="#{employee.startedAt}">
+                    <f:converter converterId="localDateTimeConverter"/>
+                </h:outputText>
+
+            </h:column>
+
+
+
+
+
+            <h:column>
+                <h:form>
+                    <h:commandButton value="Delete" action="#{employeesController.deleteEmployee(employee.id)}"/>
+                </h:form>
+            </h:column>
+
+        </h:dataTable>
+
+        <ui:repeat value="#{employeesController.employees}" var="employee">
+            <h:panelGroup id="employee-panel-group" layout="block">
+                #{employee.name} <br/>
+                #{employee.id}
+            </h:panelGroup>
+
+        </ui:repeat>
+
+        <h:link value="Create employee" outcome="create-employee.xhtml"></h:link>
+    </ui:define>
+</ui:composition>
+</f:view>
+<h:head>
+    <title>Employees</title>
+    <h:outputStylesheet library="css" name="employee.css"/>
+    <h:outputStylesheet library="webjars" name="/bootstrap/4.3.1/css/bootstrap.min.css"/>
+</h:head>
+
+
+<h:body>
+
+
+
+
+</h:body>
+
+</html>
